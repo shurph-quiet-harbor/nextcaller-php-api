@@ -1,0 +1,25 @@
+{
+    "name": "nextcaller/nextcaller-php-api",
+    "description": "Client for Next Caller API",
+    "type": "library",
+    "version": "1.0.0",
+    "authors": [],
+    "keywords": [
+        "Next Caller",
+        "API"
+    ],
+    "homepage": "http://dev.nextcaller.com/",
+    "license": "MIT",
+
+    "require": {
+        "guzzle/guzzle": "3.9.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "NextCaller": "src/"
+        }
+    }
+}

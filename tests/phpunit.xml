@@ -1,0 +1,12 @@
+<phpunit bootstrap="../vendor/autoload.php">
+    <testsuite name="NextCaller">
+        <directory>NextCallerMocker</directory>
+    </testsuite>
+    <logging>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+    </logging>
+    <php>
+        <env name="NC_API_KEY" value="API_KEY"/>
+        <env name="NC_API_SECRET" value="API_SECRET"/>
+    </php>
+</phpunit>

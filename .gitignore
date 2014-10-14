@@ -1,0 +1,11 @@
+# composer
+.buildpath
+composer.phar
+composer.lock
+.idea
+vendor
+*~
+*#
+# phar
+*.phar
+.DS_Store
