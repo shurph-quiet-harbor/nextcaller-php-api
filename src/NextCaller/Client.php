@@ -122,16 +122,13 @@ class Client
     /**
      * @param \Guzzle\Http\Message\Request $response
      * @throws FormatException
-     * @throws NotFoundException
      * @return array
      */
     protected function proceedResponse(\Guzzle\Http\Message\Request $response) {
         $response = $response->send();
-        if ($response->getStatusCode() == 204) {
+        $body = $response->getBody(true);
+        if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300 && empty($body)) {
             return null;
-        }
-        if ($response->getStatusCode() == 404) {
-            throw new NotFoundException($response->getReasonPhrase());
         }
         if ($response->getHeader('content-type') == 'application/json') {
             return $response->json();

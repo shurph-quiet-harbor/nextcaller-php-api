@@ -8,7 +8,7 @@ use NextCaller\Exception\NoContentException;
 class ExceptionsTest extends \PHPUnit_Framework_TestCase
 {
 
-    const PROFILE_ID = '97d949a413f4ea8b85e9586e1f2d9aERROR';
+    const PROFILE_ID = '97d949a413f4ea8b85e9586e1ERROR';
 
     public function testProfileArray() {
         $client = new Client(null, null);
