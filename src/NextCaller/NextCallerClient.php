@@ -16,7 +16,7 @@ class NextCallerClient
     /** @var string */
     protected static $_auth;
     /** @var string */
-    protected static $_format = 'json';
+    protected static $_format = JSON_RESPONSE_FORMAT;
     /** @var string */
     protected static $_url;
 
@@ -119,19 +119,26 @@ class NextCallerClient
     }
 
     /**
-     * @param Request $response
-     * @throws FormatException
+     * @param Request $request
      * @return array
+     * @throws Exception\BadResponseException
+     * @throws FormatException
      */
-    protected function proceedResponse(Request $response) {
-        $response = $response->send();
+    protected function proceedResponse(Request $request) {
+        try {
+            $response = $request->send();
+        } catch (\Guzzle\Http\Exception\BadResponseException $badResponseException) {
+            throw new \NextCaller\Exception\BadResponseException($badResponseException);
+        }
+
         $body = $response->getBody(true);
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300 && empty($body)) {
             return null;
         }
-        if ($response->getHeader('content-type') == 'application/json') {
+        try {
             return $response->json();
+        } catch (\Exception $exception) {
+            throw new FormatException('Not valid response content type', 1, $exception, $request, $response);
         }
-        throw new FormatException('Not valid response content type');
     }
 }

@@ -7,5 +7,5 @@ vendor
 *~
 *#
 # phar
-*.phar
+*.log
 .DS_Store
