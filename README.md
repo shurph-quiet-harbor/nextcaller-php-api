@@ -53,10 +53,10 @@ Example
 -------
 ```php
 <?php
-$apiKey = "XXXXX";
-$apiSecret = "XXXXX";
+$user = "XXXXX";
+$password = "XXXXX";
 $phoneNumber = "121212...";
-$client = new Client($apiKey, $apiSecret);
+$client = new Client($user, $password);
 $profiles = $client->getProfileByPhone($phoneNumber);
 var_dump($profiles);
 ```
@@ -67,14 +67,14 @@ Client
 
 ```php
 <?php
-$apiKey = "XXXXX";
-$apiSecret = "XXXXX";
-$client = new \NextCaller\Client($apiKey, $apiSecret);
+$user = "XXXXX";
+$password = "XXXXX";
+$client = new \NextCaller\Client($user, $password);
 ```
 
 Parameters:
-$apiKey - api key;
-$apiSecret - api secret;
+$user - api key;
+$password - api secret;
 
 
 ### Get profile by phone ###

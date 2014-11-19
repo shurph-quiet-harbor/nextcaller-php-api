@@ -2,15 +2,10 @@
 
 namespace NextCaller;
 
-use Guzzle\Http\Message\ResponseInterface;
 use NextCaller\Exception\FormatException;
-use NextCaller\Exception\NoContentException;
-use NextCaller\Exception\NotFoundException;
 
 class Client
 {
-    private $__formats = array('json', 'xml');
-
     /** @var \Guzzle\Http\Client */
     protected static $_client;
     /** @var string */
@@ -21,22 +16,21 @@ class Client
     protected static $_url;
 
     /**
-     * @param string $apiKey
-     * @param string $apiSecret
-     * @param string $format
+     * @param string $user
+     * @param string $password
      * @param string $_url
      */
-    public function __construct($apiKey, $apiSecret, $_url = 'https://api.nextcaller.com/v2/') {
-        if (empty($apiKey)) {
-            $apiKey = getenv('NC_API_KEY');
+    public function __construct($user, $password, $_url = 'https://api.nextcaller.com/v2/') {
+        if (empty($user)) {
+            $user = getenv('NC_API_KEY');
         }
-        if (empty($apiSecret)) {
-            $apiSecret = getenv('NC_API_SECRET');
+        if (empty($password)) {
+            $password = getenv('NC_API_SECRET');
         }
         if (empty(self::$_client)) {
             self::$_client = new \Guzzle\Http\Client();
         }
-        return $this->setBasicAuth($apiKey, $apiSecret)->setUrl($_url);
+        return $this->setBasicAuth($user, $password)->setUrl($_url);
     }
 
     public function addSubscriber(\Symfony\Component\EventDispatcher\EventSubscriberInterface $client){
@@ -48,12 +42,12 @@ class Client
     }
 
     /**
-     * @param string $apiKey
-     * @param string $apiSecret
+     * @param string $user
+     * @param string $password
      * @return $this
      */
-    public function setBasicAuth($apiKey, $apiSecret) {
-        self::$_auth = array($apiKey, $apiSecret);
+    public function setBasicAuth($user, $password) {
+        self::$_auth = array($user, $password);
         return $this;
     }
 
@@ -80,7 +74,7 @@ class Client
     /**
      * @param string $id
      * @internal param string $phone
-     * @return ResponseInterface
+     * @return \Guzzle\Http\Message\Request
      */
     public function getProfileResponse($id) {
         $options = array('query' => array('format' => self::$_format));
@@ -99,7 +93,7 @@ class Client
 
     /**
      * @param string $phone
-     * @return ResponseInterface
+     * @return \Guzzle\Http\Message\Request
      */
     public function getProfileByPhoneResponse($phone) {
         $options = array('query' => array('phone' => $phone, 'format' => self::$_format));

@@ -3,7 +3,6 @@
 namespace NextCaller\Test;
 
 use NextCaller\Client;
-use NextCaller\Exception\NoContentException;
 
 class ExceptionsTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +12,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
     public function testProfileArray() {
         $client = new Client(null, null);
         try {
-            $response = $client->getProfile(self::PROFILE_ID);
+            $client->getProfile(self::PROFILE_ID);
         } catch (\Guzzle\Http\Exception\ClientErrorResponseException $expected) {
             $this->assertEquals(404,$expected->getResponse()->getStatusCode());
             return;
