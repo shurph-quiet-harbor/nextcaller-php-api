@@ -2,7 +2,7 @@
 
 namespace NextCaller\Test;
 
-use NextCaller\Client;
+use NextCaller\NextCallerClient;
 
 class ProfileGetTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,7 +11,7 @@ class ProfileGetTest extends \PHPUnit_Framework_TestCase
     const PROFILE_ID = '97d949a413f4ea8b85e9586e1f2d9a';
 
     public function testProfileJson() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $profile = $client->getProfile(self::PROFILE_ID);
         $this->assertEquals($profile, json_decode(self::JSON_RESPONSE,true));
     }

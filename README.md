@@ -56,20 +56,20 @@ Example
 $user = "XXXXX";
 $password = "XXXXX";
 $phoneNumber = "121212...";
-$client = new Client($user, $password);
+$client = new NextCallerClient($user, $password);
 $profiles = $client->getProfileByPhone($phoneNumber);
 var_dump($profiles);
 ```
 
 
-Client
+NextCallerClient
 -------------
 
 ```php
 <?php
 $user = "XXXXX";
 $password = "XXXXX";
-$client = new \NextCaller\Client($user, $password);
+$client = new \NextCaller\NextCallerClient($user, $password);
 ```
 
 Parameters:
@@ -81,7 +81,7 @@ $password - api secret;
 
 ```php
 <?php
-$client = new \NextCaller\Client("XXXXX", "XXXXX");
+$client = new \NextCaller\NextCallerClient("XXXXX", "XXXXX");
 $profiles = $client->getProfileByPhone($phoneNumber);
 ```
 
@@ -92,7 +92,7 @@ $phoneNumber - phone number;
 
 ```php
 <?php
-$client = new \NextCaller\Client("XXXXX", "XXXXX");
+$client = new \NextCaller\NextCallerClient("XXXXX", "XXXXX");
 $profiles = $client->getProfile($id);
 ```
 
@@ -104,7 +104,7 @@ $id - id of a profile;
 
 ```php
 <?php
-$client = new \NextCaller\Client("XXXXX", "XXXXX");
+$client = new \NextCaller\NextCallerClient("XXXXX", "XXXXX");
 $response = $client->setProfile($id, $data);
 ```
 

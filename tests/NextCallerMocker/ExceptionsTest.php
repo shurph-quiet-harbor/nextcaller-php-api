@@ -2,7 +2,7 @@
 
 namespace NextCaller\Test;
 
-use NextCaller\Client;
+use NextCaller\NextCallerClient;
 
 class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,7 +11,7 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
     protected static $mock;
 
     public static function setUpBeforeClass() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $mocker = new \Guzzle\Plugin\Mock\MockPlugin();
         $mocker->addResponse(new \Guzzle\Http\Message\Response(404,array(),''));
         $client->addSubscriber($mocker);
@@ -19,14 +19,14 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
     }
 
     public static function tearDownAfterClass(){
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $client->removeSubscriber(self::$mock);
     }
 
     public function testProfileArray() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         try {
-            $response = $client->getProfile(self::PROFILE_ID);
+            $client->getProfile(self::PROFILE_ID);
         } catch (\Guzzle\Http\Exception\ClientErrorResponseException $expected) {
             $this->assertEquals(404,$expected->getResponse()->getStatusCode());
             return;

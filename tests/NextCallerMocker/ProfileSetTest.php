@@ -2,8 +2,7 @@
 
 namespace NextCaller\Test;
 
-use NextCaller\Client;
-use NextCaller\Exception\NoContentException;
+use NextCaller\NextCallerClient;
 
 class ProfileMockerSetTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +23,7 @@ class ProfileMockerSetTest extends \PHPUnit_Framework_TestCase
     protected static $mock;
 
     public static function setUpBeforeClass() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $mocker = new \Guzzle\Plugin\Mock\MockPlugin();
         $mocker->addResponse(new \Guzzle\Http\Message\Response(204,array('content-type' => 'application/json')));
         $client->addSubscriber($mocker);
@@ -32,12 +31,12 @@ class ProfileMockerSetTest extends \PHPUnit_Framework_TestCase
     }
 
     public static function tearDownAfterClass() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $client->removeSubscriber(self::$mock);
     }
 
     public function testProfileArray() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $data = json_decode(self::JSON_DATA, true);
         $response = $client->setProfile(self::PROFILE_ID, $data);
         $this->assertEquals($response, null);

@@ -2,7 +2,7 @@
 
 namespace NextCaller\Test;
 
-use NextCaller\Client;
+use NextCaller\NextCallerClient;
 
 class ProfileGetByPhoneTest extends \PHPUnit_Framework_TestCase
 {
@@ -11,7 +11,7 @@ class ProfileGetByPhoneTest extends \PHPUnit_Framework_TestCase
     const PROFILE_PHONE = '2125558383';
 
     public function testProfileJson() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $profiles = $client->getProfileByPhone(self::PROFILE_PHONE);
         $this->assertEquals($profiles, json_decode(self::JSON_RESPONSE,true));
     }

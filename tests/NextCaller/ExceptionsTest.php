@@ -2,7 +2,7 @@
 
 namespace NextCaller\Test;
 
-use NextCaller\Client;
+use NextCaller\NextCallerClient;
 
 class ExceptionsTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +10,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
     const PROFILE_ID = '97d949a413f4ea8b85e9586e1ERROR';
 
     public function testProfileArray() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         try {
             $client->getProfile(self::PROFILE_ID);
         } catch (\Guzzle\Http\Exception\ClientErrorResponseException $expected) {

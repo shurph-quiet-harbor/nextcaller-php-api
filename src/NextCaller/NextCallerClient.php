@@ -4,7 +4,7 @@ namespace NextCaller;
 
 use NextCaller\Exception\FormatException;
 
-class Client
+class NextCallerClient
 {
     /** @var \Guzzle\Http\Client */
     protected static $_client;

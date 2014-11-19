@@ -2,7 +2,7 @@
 
 namespace NextCaller\Test;
 
-use NextCaller\Client;
+use NextCaller\NextCallerClient;
 
 class ProfileMockerGetByPhoneTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +13,7 @@ class ProfileMockerGetByPhoneTest extends \PHPUnit_Framework_TestCase
     protected static $mock;
 
     public static function setUpBeforeClass() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $mocker = new \Guzzle\Plugin\Mock\MockPlugin();
         $mocker->addResponse(new \Guzzle\Http\Message\Response(200,
                 array('content-type' => 'application/json'),
@@ -23,11 +23,11 @@ class ProfileMockerGetByPhoneTest extends \PHPUnit_Framework_TestCase
     }
 
     public static function tearDownAfterClass(){
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $client->removeSubscriber(self::$mock);
     }
     public function testProfileJson() {
-        $client = new Client(null, null);
+        $client = new NextCallerClient(null, null);
         $profiles = $client->getProfileByPhone(self::PROFILE_PHONE);
         $this->assertEquals($profiles, json_decode(self::JSON_RESPONSE,true));
     }
