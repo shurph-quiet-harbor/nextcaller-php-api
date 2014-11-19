@@ -2,11 +2,16 @@
 
 namespace NextCaller;
 
+use Guzzle\Http\Client;
+use Guzzle\Http\Message\Request;
 use NextCaller\Exception\FormatException;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+require_once('Constants.php');
 
 class NextCallerClient
 {
-    /** @var \Guzzle\Http\Client */
+    /** @var Client */
     protected static $_client;
     /** @var string */
     protected static $_auth;
@@ -18,9 +23,9 @@ class NextCallerClient
     /**
      * @param string $user
      * @param string $password
-     * @param string $_url
+     * @param boolean $sandbox
      */
-    public function __construct($user, $password, $_url = 'https://api.nextcaller.com/v2/') {
+    public function __construct($user, $password, $sandbox = false) {
         if (empty($user)) {
             $user = getenv('NC_API_KEY');
         }
@@ -28,16 +33,16 @@ class NextCallerClient
             $password = getenv('NC_API_SECRET');
         }
         if (empty(self::$_client)) {
-            self::$_client = new \Guzzle\Http\Client();
+            self::$_client = new Client();
         }
-        return $this->setBasicAuth($user, $password)->setUrl($_url);
+        return $this->setBasicAuth($user, $password)->setUrl($sandbox);
     }
 
-    public function addSubscriber(\Symfony\Component\EventDispatcher\EventSubscriberInterface $client){
+    public function addSubscriber(EventSubscriberInterface $client) {
         self::$_client->addSubscriber($client);
     }
 
-    public function removeSubscriber(\Symfony\Component\EventDispatcher\EventSubscriberInterface $client){
+    public function removeSubscriber(EventSubscriberInterface $client) {
         self::$_client->getEventDispatcher()->removeSubscriber($client);
     }
 
@@ -52,11 +57,11 @@ class NextCallerClient
     }
 
     /**
-     * @param string $url
+     * @param boolean $sandbox
      * @return $this
      */
-    public function setUrl($url) {
-        self::$_url = $url;
+    public function setUrl($sandbox) {
+        self::$_url = sprintf($sandbox ? BASE_SANDBOX_URL : BASE_URL, DEFAULT_API_VERSION);
         return $this;
     }
 
@@ -74,7 +79,7 @@ class NextCallerClient
     /**
      * @param string $id
      * @internal param string $phone
-     * @return \Guzzle\Http\Message\Request
+     * @return Request
      */
     public function getProfileResponse($id) {
         $options = array('query' => array('format' => self::$_format));
@@ -93,7 +98,7 @@ class NextCallerClient
 
     /**
      * @param string $phone
-     * @return \Guzzle\Http\Message\Request
+     * @return Request
      */
     public function getProfileByPhoneResponse($phone) {
         $options = array('query' => array('phone' => $phone, 'format' => self::$_format));
@@ -114,11 +119,11 @@ class NextCallerClient
     }
 
     /**
-     * @param \Guzzle\Http\Message\Request $response
+     * @param Request $response
      * @throws FormatException
      * @return array
      */
-    protected function proceedResponse(\Guzzle\Http\Message\Request $response) {
+    protected function proceedResponse(Request $response) {
         $response = $response->send();
         $body = $response->getBody(true);
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300 && empty($body)) {
