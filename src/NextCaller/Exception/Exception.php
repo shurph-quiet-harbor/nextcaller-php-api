@@ -2,35 +2,38 @@
 
 namespace NextCaller\Exception;
 
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\Message\Response;
-
+use Buzz\Message\Request;
+use Buzz\Message\Response;
 
 class Exception extends \Exception
 {
 
     /** @var Response */
     protected $response;
-    /** @var RequestInterface */
+    /** @var Request */
     protected $request;
 
-    public function setRequest(RequestInterface $request) {
-        $this->request = $request;
-
-        return $this;
+    public function __construct($message, $code = 0, \Exception $previous = null, $request = null, $response = null) {
+        parent::__construct($message, $code, $previous);
+        $this->setRequest($request);
+        $this->setResponse($response);
     }
 
     public function getRequest() {
         return $this->request;
     }
 
-    public function setResponse(Response $response) {
-        $this->response = $response;
-
+    public function setRequest(Request $request) {
+        $this->request = $request;
         return $this;
     }
 
     public function getResponse() {
         return $this->response;
+    }
+
+    public function setResponse(Response $response) {
+        $this->response = $response;
+        return $this;
     }
 }

@@ -8,20 +8,13 @@ class ProfileSetTest extends \PHPUnit_Framework_TestCase
 {
     const JSON_DATA = '{
     "first_name": "Clark",
-    "last_name": "Kent",
-    "shipping_address1": {
-        "line1": "225 Kryptonite Ave.",
-        "line2": "",
-        "city": "Smallville",
-        "state": "KS",
-        "zip_code": "66002"
-    }
+    "last_name": "Kent"
 }';
-
-    const PROFILE_ID = '97d949a413f4ea8b85e9586e1f2d9a';
+    const PROFILE_ID = 'c7c17736128033c92771b7f33fead7';
+    const PROFILE_PLATFORM_USER = 'user12345';
 
     public function testProfileArray() {
-        $client = new NextCallerClient(null, null);
+        $client = new NextCallerClient(null, null, true);
         $data = json_decode(self::JSON_DATA, true);
         $response = $client->setProfile(self::PROFILE_ID, $data);
         $this->assertEquals($response, null);

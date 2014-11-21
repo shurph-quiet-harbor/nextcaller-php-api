@@ -2,23 +2,14 @@
 
 namespace NextCaller;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\Request;
+use Buzz\Message\Response;
+use NextCaller\Exception\BadResponseException;
 use NextCaller\Exception\FormatException;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-require_once('Constants.php');
 
 class NextCallerClient
 {
-    /** @var Client */
-    protected static $_client;
-    /** @var string */
-    protected static $_auth;
-    /** @var string */
-    protected static $_format = JSON_RESPONSE_FORMAT;
-    /** @var string */
-    protected static $_url;
+    /** @var NextCallerBrowser */
+    protected $browser;
 
     /**
      * @param string $user
@@ -32,113 +23,97 @@ class NextCallerClient
         if (empty($password)) {
             $password = getenv('NC_API_SECRET');
         }
-        if (empty(self::$_client)) {
-            self::$_client = new Client();
+        $this->browser = new NextCallerBrowser();
+        return $this->browser->setSandbox($sandbox)->setAuth($user, $password);
+    }
+
+    /**
+     * @link https://nextcaller.com/documentation/#/get-profile/php
+     * @param string $id
+     * @param $platformUsername
+     * @return array
+     * @throws FormatException
+     */
+    public function getProfile($id, $platformUsername = null) {
+        $request = $this->browser->get('users/' . $id . '/', array('platform_username' => $platformUsername));
+        return $this->proceedResponse($request);
+    }
+
+    /**
+     * @param Response $response
+     * @return array|null
+     * @throws BadResponseException
+     * @throws FormatException
+     */
+    protected function proceedResponse(Response $response) {
+        $body = $response->getContent();
+        if (empty($body) && $response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
+            return null;
         }
-        return $this->setBasicAuth($user, $password)->setUrl($sandbox);
-    }
-
-    public function addSubscriber(EventSubscriberInterface $client) {
-        self::$_client->addSubscriber($client);
-    }
-
-    public function removeSubscriber(EventSubscriberInterface $client) {
-        self::$_client->getEventDispatcher()->removeSubscriber($client);
-    }
-
-    /**
-     * @param string $user
-     * @param string $password
-     * @return $this
-     */
-    public function setBasicAuth($user, $password) {
-        self::$_auth = array($user, $password);
-        return $this;
-    }
-
-    /**
-     * @param boolean $sandbox
-     * @return $this
-     */
-    public function setUrl($sandbox) {
-        self::$_url = sprintf($sandbox ? BASE_SANDBOX_URL : BASE_URL, DEFAULT_API_VERSION);
-        return $this;
+        $result = json_decode($body, true);
+        if ($result === null) {
+            throw new FormatException(
+                'JSON parse error', 1, null,
+                $this->browser->getLastRequest(),
+                $this->browser->getLastResponse()
+            );
+        }
+        if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
+            return $result;
+        }
+        if (!$result || !$result['error']) {
+            throw new FormatException(
+                'Not valid error response', 3, null,
+                $this->browser->getLastRequest(),
+                $this->browser->getLastResponse()
+            );
+        }
+        $e = new BadResponseException(
+            $result['error']['message'], $result['error']['code'], null,
+            $this->browser->getLastRequest(),
+            $this->browser->getLastResponse()
+        );
+        $e->setError($result['error']);
+        throw $e;
     }
 
     /**
-     * @link https://dev.nextcaller.com/documentation/get-profile/
-     * @param string $id
-     * @return array
-     */
-    public function getProfile($id) {
-        $response = $this->getProfileResponse($id);
-        $response->setAuth(self::$_auth[0], self::$_auth[1]);
-        return $this->proceedResponse($response);
-    }
-
-    /**
-     * @param string $id
-     * @internal param string $phone
-     * @return Request
-     */
-    public function getProfileResponse($id) {
-        $options = array('query' => array('format' => self::$_format));
-        return self::$_client->get(self::$_url . 'users/' . $id . '/', null, $options);
-    }
-
-    /**
+     * @link https://nextcaller.com/documentation/#/get-profile/php
      * @param string $phone
+     * @param null $platformUsername
      * @return array
+     * @throws FormatException
      */
-    public function getProfileByPhone($phone) {
-        $response = $this->getProfileByPhoneResponse($phone);
-        $response->setAuth(self::$_auth[0], self::$_auth[1]);
-        return $this->proceedResponse($response);
+    public function getProfileByPhone($phone, $platformUsername = null) {
+        $request = $this->browser->get('records/', array('phone' => $phone, 'platform_username' => $platformUsername));
+        return $this->proceedResponse($request);
     }
 
     /**
-     * @param string $phone
-     * @return Request
-     */
-    public function getProfileByPhoneResponse($phone) {
-        $options = array('query' => array('phone' => $phone, 'format' => self::$_format));
-        return self::$_client->get(self::$_url . 'records/',null, $options);
-    }
-
-    /**
-     * @link https://dev.nextcaller.com/documentation/post-profile/
+     * @link https://nextcaller.com/documentation/#/post-profile/php
      * @param string $id
-     * @param array
+     * @param array $data
+     * @param string $platformUsername
      * @return array
      */
-    public function setProfile($id, $data) {
-        $options = array('query' => array('format' => self::$_format));
-        $response = self::$_client->post(self::$_url . 'users/' . $id . '/', null, json_encode($data), $options);
-        $response->setAuth(self::$_auth[0], self::$_auth[1]);
+    public function setProfile($id, $data, $platformUsername = null) {
+        $response = $this->browser->post('users/' . $id . '/',
+            array('platform_username' => $platformUsername),
+            json_encode($data, JSON_PRETTY_PRINT));
         return $this->proceedResponse($response);
     }
 
     /**
-     * @param Request $request
+     * @link https://nextcaller.com/documentation/#/get-fraud-level/php
+     * @param $phone
+     * @param $platformUsername
      * @return array
      * @throws Exception\BadResponseException
      * @throws FormatException
      */
-    protected function proceedResponse(Request $request) {
-        try {
-            $response = $request->send();
-        } catch (\Guzzle\Http\Exception\BadResponseException $badResponseException) {
-            throw new \NextCaller\Exception\BadResponseException($badResponseException);
-        }
-
-        $body = $response->getBody(true);
-        if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300 && empty($body)) {
-            return null;
-        }
-        try {
-            return $response->json();
-        } catch (\Exception $exception) {
-            throw new FormatException('Not valid response content type', 1, $exception, $request, $response);
-        }
+    public function getFraudLevel($phone, $platformUsername) {
+        $response = $this->browser->get('fraud/',
+            array('phone' => $phone, 'platform_username' => $platformUsername));
+        return $this->proceedResponse($response);
     }
 }
