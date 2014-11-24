@@ -47,42 +47,35 @@ Then make sure to `require` the autoloader and initialize all:
 require(__DIR__ . '/vendor/autoload.php');
 ```
 
-## Usage
-
-Example
--------
-```php
-<?php
-$apiKey = "XXXXX";
-$apiSecret = "XXXXX";
-$phoneNumber = "121212...";
-$client = new Client($apiKey, $apiSecret);
-$profiles = $client->getProfileByPhone($phoneNumber);
-var_dump($profiles);
-```
-
-
-Client
+NextCallerClient
 -------------
 
 ```php
 <?php
-$apiKey = "XXXXX";
-$apiSecret = "XXXXX";
-$client = new \NextCaller\Client($apiKey, $apiSecret);
+require(__DIR__ . '/vendor/autoload.php');
+
+use NextCaller\NextCallerClient;
+
+$user = "";
+$password = "";
+$phoneNumber = "XXXX";
+$sandbox = true;
+
+$client = new NextCallerClient($user, $password, $sandbox);
 ```
 
 Parameters:
-$apiKey - api key;
-$apiSecret - api secret;
+$user - api key;
+$password - api secret;
+$sandbox - (boolean) is sandbox
 
 
 ### Get profile by phone ###
 
 ```php
 <?php
-$client = new \NextCaller\Client("XXXXX", "XXXXX");
-$profiles = $client->getProfileByPhone($phoneNumber);
+$phoneNumber = 'XXXX';
+$records = $client->getProfileByPhone($phoneNumber);
 ```
 
 Parameters:
@@ -92,8 +85,8 @@ $phoneNumber - phone number;
 
 ```php
 <?php
-$client = new \NextCaller\Client("XXXXX", "XXXXX");
-$profiles = $client->getProfile($id);
+$id = 'XXXX';
+$profile = $client->getProfile($id);
 ```
 
 Parameters:
@@ -104,13 +97,193 @@ $id - id of a profile;
 
 ```php
 <?php
-$client = new \NextCaller\Client("XXXXX", "XXXXX");
+$id = 'XXXX';
+$data = array(
+    "first_name"=> "Clark",
+    "last_name"=> "Kent"
+);
 $response = $client->setProfile($id, $data);
 ```
 
 Parameters:
 $id - id of a profile;
 $data - data to update.
+
+### Get Fraud Level ###
+
+```php
+<?php
+$phoneNumber = 'XXXX';
+$platformUsername = 'XXXX';
+$result =  $client->getFraudLevel($phoneNumber, $platformUsername);
+```
+
+Parameters:
+$phoneNumber - id of a profile;
+$platformUsername - data to update.
+
+
+NextCallerPlatformClient
+-------------
+
+```php
+<?php
+require(__DIR__ . '/vendor/autoload.php');
+
+use NextCaller\NextCallerPlatformClient;
+
+$user = "XXXX";
+$password = "XXXX";
+$phoneNumber = "XXXX";
+$sandbox = true;
+
+$client = new NextCallerPlatformClient($user, $password, $sandbox);
+```
+
+Parameters:
+$user - api key;
+$password - api secret;
+$sandbox - (boolean) is sandbox
+
+
+### Get profile by phone ###
+
+```php
+<?php
+$phoneNumber = 'XXXX';
+$platformUsername = 'XXXX';
+$records = $client->getProfileByPhone($phoneNumber, $platformUser);
+```
+
+Parameters:
+$phoneNumber - phone number;
+$platformUsername - Platform username.
+
+### Get profile by id ###
+
+```php
+<?php
+$id = 'XXXX';
+$platformUsername = 'XXXX';
+$profile = $client->getProfile($id, $platformUser);
+```
+
+Parameters:
+$id - id of a profile;
+$platformUsername - Platform username.
+
+
+### Update profile ###
+
+```php
+<?php
+$id = 'XXXX';
+$platformUsername = 'XXXX';
+$data = array(
+    "first_name"=> "Clark",
+    "last_name"=> "Kent"
+);
+$response = $client->setProfile($id, $data, $platformUser);
+```
+
+Parameters:
+$id - id of a profile;
+$platformUsername - Platform username.
+$data - data to update.
+
+### Get Fraud Level ###
+
+```php
+<?php
+$phoneNumber = 'XXXX';
+$platformUsername = 'XXXX';
+$result =  $client->getFraudLevel($phoneNumber, $platformUsername);
+```
+
+Parameters:
+$phoneNumber - id of a profile;
+$platformUsername - Platform username.
+
+### Get Platform Statistic ###
+
+```php
+<?php
+$result =  $client->getPlatformStatistics();
+```
+
+### Get Platform User ###
+
+```php
+<?php
+$platformUsername = 'XXXX';
+$platformUser = $client->getPlatformUser($platformUsername);
+```
+
+Parameters:
+$platformUsername - Platform username.
+
+
+### Update Platform User ###
+
+```php
+<?php
+$platformUsername = 'XXXX';
+$data = array(
+    "first_name" => "XXXX"
+);
+$client->updatePlatformUser($platformUsername, $data);
+```
+
+Parameters:
+$platformUsername - Platform username.
+$data - Data for update.
+
+## Errors handling 
+
+### BadResponseException ###
+
+In case of an incorrect answer received lib throws \NextCaller\Exception\BadResponseException.
+Error data can be access with getError() method. 
+Original request and response can be access with getRequest() and getResponse methods. 
+```php
+<?php
+try {
+    $records = $client->getProfileByPhone($phoneNumber);
+} catch (\NextCaller\Exception\BadResponseException $e) {
+    var_dump($e->getError());
+    var_dump($e->getCode());
+    var_dump($e->getMessage());
+    $request = $e->getRequest();
+    $response = $e->getResponse();
+}
+``` 
+
+### FormatException ###
+
+In case of an incorrect answer received and can't be parsed lib throws \NextCaller\Exception\FormatException.
+Original request and response can be access with getRequest() and getResponse methods. 
+```php
+<?php
+try {
+    $records = $client->getProfileByPhone($phoneNumber);
+} catch (\NextCaller\Exception\BadResponseException $e) {
+    var_dump($e->getCode());
+    var_dump($e->getMessage());
+    $request = $e->getRequest();
+    $response = $e->getResponse();
+}
+```
+
+### Other Exceptions ###
+
+In case of the library gets a response with the http code more or equal 400 (4xx codes), the \Guzzle\Http\Exception\ClientErrorResponseException exception is raised.
+
+In case of the library gets a response with the http code more or equal 500 (5xx codes), the \Guzzle\Http\Exception\ServerErrorResponseException exception is raised.
+
+If a request exceeds the configured number of maximum redirections, the \Guzzle\Http\Exception\TooManyRedirectsException exception is raised.
+
+All exceptions inherit from the requests.exceptions.RequestException.
+Guzzle\Http\Exception\BadResponseException
 
 ## Testing
 

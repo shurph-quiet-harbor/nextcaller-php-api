@@ -2,7 +2,7 @@
 
 namespace NextCaller\Exception;
 
-
-class FormatException extends NextCallerException
+class FormatException extends Exception
 {
+
 }

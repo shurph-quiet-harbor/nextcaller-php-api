@@ -1,11 +1,9 @@
 # composer
-.buildpath
-composer.phar
 composer.lock
-.idea
 vendor
+
 *~
 *#
 # phar
-*.log
+*.phar
 .DS_Store
