@@ -2,9 +2,11 @@
 
 namespace NextCaller;
 
-use Buzz\Message\Response;
+use Guzzle\Http\Exception\ClientErrorResponseException;
+use Guzzle\Http\Message\Request;
 use NextCaller\Exception\BadResponseException;
 use NextCaller\Exception\FormatException;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class NextCallerClient
 {
@@ -28,6 +30,20 @@ class NextCallerClient
     }
 
     /**
+     * @param EventSubscriberInterface $client
+     */
+    public function addSubscriber(EventSubscriberInterface $client) {
+        $this->browser->getClient()->addSubscriber($client);
+    }
+
+    /**
+     * @param EventSubscriberInterface $client
+     */
+    public function removeSubscriber(EventSubscriberInterface $client) {
+        $this->browser->getClient()->getEventDispatcher()->removeSubscriber($client);
+    }
+
+    /**
      * @link https://nextcaller.com/documentation/#/get-profile/php
      * @param string $id
      * @param $platformUsername
@@ -40,13 +56,19 @@ class NextCallerClient
     }
 
     /**
-     * @param Response $response
+     * @param Request $request
      * @return array|null
      * @throws BadResponseException
      * @throws FormatException
+     * @internal param Response $response
      */
-    protected function proceedResponse(Response $response) {
-        $body = $response->getContent();
+    protected function proceedResponse(Request $request) {
+        try {
+            $response = $request->send();
+        } catch (ClientErrorResponseException $e) {
+            $response = $e->getResponse();
+        }
+        $body = $response->getBody(true);
         if (empty($body) && $response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
             return null;
         }
@@ -54,8 +76,8 @@ class NextCallerClient
         if ($result === null) {
             throw new FormatException(
                 'JSON parse error', 1, null,
-                $this->browser->getLastRequest(),
-                $this->browser->getLastResponse()
+                $request,
+                $response
             );
         }
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
@@ -64,14 +86,14 @@ class NextCallerClient
         if (!$result || !$result['error']) {
             throw new FormatException(
                 'Not valid error response', 3, null,
-                $this->browser->getLastRequest(),
-                $this->browser->getLastResponse()
+                $request,
+                $response
             );
         }
         $e = new BadResponseException(
             $result['error']['message'], $result['error']['code'], null,
-            $this->browser->getLastRequest(),
-            $this->browser->getLastResponse()
+            $request,
+            $response
         );
         $e->setError($result['error']);
         throw $e;

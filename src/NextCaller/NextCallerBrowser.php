@@ -2,39 +2,27 @@
 
 namespace NextCaller;
 
-use Buzz\Browser;
-use Buzz\Client\ClientInterface;
-use Buzz\Client\Curl;
-use Buzz\Listener\BasicAuthListener;
-use Buzz\Message\Factory\FactoryInterface;
-use Buzz\Message\MessageInterface;
-use Buzz\Message\RequestInterface;
-use Buzz\Util\Url;
+use Guzzle\Http\Client;
 
 require_once('Constants.php');
 
 
-class BasicListener implements \Buzz\Listener\ListenerInterface
+class NextCallerBrowser
 {
-    public function preSend(RequestInterface $request) {
-        $request->addHeader('Content-Type: application/json');
+    protected $user;
+    protected $password;
+    /** @var Client client */
+    protected $client;
+
+    public function __construct(Client $client = null) {
+        if (empty($client)) {
+            $client = new Client();
+        }
+        $this->client = $client;
     }
 
-    public function postSend(RequestInterface $request, MessageInterface $response) {
-    }
-}
-
-
-class NextCallerBrowser extends Browser
-{
-    protected $hostMask;
-
-    /**
-     * @param ClientInterface $client
-     * @param FactoryInterface $factory
-     */
-    public function __construct(ClientInterface $client = null, FactoryInterface $factory = null) {
-        parent::__construct($client ?: new Curl(), $factory);
+    public function getClient() {
+        return $this->client;
     }
 
     /**
@@ -42,7 +30,7 @@ class NextCallerBrowser extends Browser
      * @return $this
      */
     public function setSandbox($sandbox) {
-        $this->hostMask = $sandbox ? BASE_SANDBOX_URL : BASE_URL;
+        $this->client->setBaseUrl(sprintf($sandbox ? BASE_SANDBOX_URL : BASE_URL, DEFAULT_API_VERSION));
         return $this;
     }
 
@@ -52,62 +40,41 @@ class NextCallerBrowser extends Browser
      * @return $this
      */
     public function setAuth($user, $password) {
-        $this->setListener(new BasicAuthListener($user, $password));
-        $this->addListener(new BasicListener());
+        $this->user = $user;
+        $this->password = $password;
         return $this;
     }
 
-    /**
-     * @param $url
-     * @param array $query
-     * @param array $headers
-     * @return \Buzz\Message\MessageInterface
-     */
     public function get($url, $query = array(), $headers = array()) {
-        $url = $this->buildUrl($url, $query);
-        return parent::get($url, $headers);
+        $request = $this->client->get($url, $this->buildHeaders($headers), $this->buildOptions($query));
+        $request->setAuth($this->user, $this->password);
+        return $request;
+    }
+
+    public function buildHeaders($headers) {
+        return array('Content-Type' => 'application/json') + $headers;
     }
 
     /**
-     * @param $url
-     * @param array $query
-     * @param string $content
-     * @param array $headers
-     * @return \Buzz\Message\MessageInterface
-     */
-    public function post($url, $query = array(), $content = '', $headers = array()) {
-        $url = $this->buildUrl($url, $query);
-        return parent::post($url, $headers, $content);
-    }
-
-    /**
-     * @param string $url
-     * @param string $method
-     * @param array $headers
-     * @param string $content
-     * @return \Buzz\Message\MessageInterface
-     */
-    public function call($url, $method, $headers = array(), $content = '') {
-        if (!$url instanceof Url) {
-            $url = new Url($url);
-        }
-        $response = parent::call($url, $method, $headers, $content);
-        return $response;
-    }
-
-    /**
-     * @param string $url
      * @param array $query
      * @return string
      */
-    protected function buildUrl($url, $query = array()) {
+    protected function buildOptions($query = array()) {
         $query = $query + array('format' => 'json');
         foreach ($query as $key => $value) {
             if (empty($value)) {
                 unset($query[$key]);
             }
         }
-        return sprintf($this->hostMask, DEFAULT_API_VERSION) . $url . '?' . http_build_query($query);
+        return array(
+            'query' => $query,
+        );
+    }
+
+    public function post($url, $query = array(), $content = '', $headers = array()) {
+        $request = $this->client->post($url, $this->buildHeaders($headers), $content, $this->buildOptions($query));
+        $request->setAuth($this->user, $this->password);
+        return $request;
     }
 
 }

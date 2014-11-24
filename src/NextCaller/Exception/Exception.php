@@ -2,8 +2,8 @@
 
 namespace NextCaller\Exception;
 
-use Buzz\Message\Request;
-use Buzz\Message\Response;
+use Guzzle\Http\Message\Request;
+use Guzzle\Http\Message\Response;
 
 class Exception extends \Exception
 {
