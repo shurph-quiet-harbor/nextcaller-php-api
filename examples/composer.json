@@ -1,5 +1,11 @@
 {
   "require": {
     "nextcaller/nextcaller-php-api": "dev-master"
-  }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/partifer/nextcaller-php-api"
+    }
+  ]
 }

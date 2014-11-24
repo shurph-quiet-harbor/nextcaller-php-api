@@ -65,8 +65,8 @@ $client = new NextCallerClient($user, $password, $sandbox);
 ```
 
 Parameters:
-$user - api key;
-$password - api secret;
+$user - username;
+$password - password;
 $sandbox - (boolean) is sandbox
 
 
@@ -141,8 +141,8 @@ $client = new NextCallerPlatformClient($user, $password, $sandbox);
 ```
 
 Parameters:
-$user - api key;
-$password - api secret;
+$user - username;
+$password - password;
 $sandbox - (boolean) is sandbox
 
 

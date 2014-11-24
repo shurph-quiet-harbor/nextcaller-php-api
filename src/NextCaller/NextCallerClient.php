@@ -73,27 +73,15 @@ class NextCallerClient
         }
         $result = json_decode($body, true);
         if ($result === null) {
-            throw new FormatException(
-                'JSON parse error', 1, null,
-                $request,
-                $response
-            );
+            throw new FormatException('JSON parse error', 1, null, $request, $response);
         }
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
             return $result;
         }
         if (!$result || !$result['error']) {
-            throw new FormatException(
-                'Not valid error response', 3, null,
-                $request,
-                $response
-            );
+            throw new FormatException('Not valid error response', 3, null, $request, $response);
         }
-        $e = new BadResponseException(
-            $result['error']['message'], $result['error']['code'], null,
-            $request,
-            $response
-        );
+        $e = new BadResponseException($result['error']['message'], $result['error']['code'], null, $request, $response);
         $e->setError($result['error']);
         throw $e;
     }
