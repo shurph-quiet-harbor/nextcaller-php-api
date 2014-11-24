@@ -60,7 +60,6 @@ class NextCallerClient
      * @return array|null
      * @throws BadResponseException
      * @throws FormatException
-     * @internal param Response $response
      */
     protected function proceedResponse(Request $request) {
         try {
@@ -118,7 +117,10 @@ class NextCallerClient
      * @param string $platformUsername
      * @return array
      */
-    public function setProfile($id, $data, $platformUsername = null) {
+    public function setProfile($id, $data, $platformUsername) {
+        if (empty($platformUsername)) {
+            $platformUsername = null;
+        }
         $response = $this->browser->post('users/' . $id . '/',
             array('platform_username' => $platformUsername),
             json_encode($data, JSON_PRETTY_PRINT));

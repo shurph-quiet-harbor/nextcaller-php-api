@@ -24,8 +24,4 @@ try {
     var_dump($e->getMessage());
     $request = $e->getRequest();
     $response = $e->getResponse();
-} catch (\Buzz\Exception\RequestException $e) {
-    var_dump($e->getCode());
-    var_dump($e->getMessage());
-    var_dump($e->getRequest());
 }

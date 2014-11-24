@@ -22,11 +22,11 @@ class NextCallerPlatformClient extends NextCallerClient
         return parent::__construct($user, $password, $sandbox);
     }
 
-    public function getProfile($id, $platformUsername) {
+    public function getProfile($id, $platformUsername = null) {
         return parent::getProfile($id, $platformUsername);
     }
 
-    public function getProfileByPhone($phone, $platformUsername) {
+    public function getProfileByPhone($phone, $platformUsername = null) {
         return parent::getProfileByPhone($phone, $platformUsername);
     }
 

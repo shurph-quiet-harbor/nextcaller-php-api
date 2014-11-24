@@ -20,8 +20,4 @@ try {
 } catch (\NextCaller\Exception\FormatException $e) {
     var_dump($e->getCode());
     var_dump($e->getMessage());
-} catch (\Buzz\Exception\RequestException $e) {
-    var_dump($e->getCode());
-    var_dump($e->getMessage());
-    var_dump($e->getRequest());
 }
