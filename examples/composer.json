@@ -1,0 +1,5 @@
+{
+  "require": {
+    "nextcaller/nextcaller-php-api": "dev-master"
+  }
+}
