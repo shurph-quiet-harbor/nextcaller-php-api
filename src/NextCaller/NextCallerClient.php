@@ -120,7 +120,7 @@ class NextCallerClient
     public function setProfile($id, $data, $platformUsername = null) {
         $response = $this->browser->post('users/' . $id . '/',
             array('platform_username' => $platformUsername),
-            json_encode($data, JSON_PRETTY_PRINT));
+            json_encode($data));
         return $this->proceedResponse($response);
     }
 
