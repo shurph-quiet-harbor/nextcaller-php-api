@@ -30,7 +30,7 @@ class NextCallerPlatformClient extends NextCallerClient
         return parent::getProfileByPhone($phone, $platformUsername);
     }
 
-    public function setProfile($id, $platformUsername, $data) {
+    public function setProfile($id, $data, $platformUsername = null) {
         return parent::setProfile($id, $data, $platformUsername);
     }
 

@@ -183,7 +183,7 @@ $data = array(
     "first_name"=> "Clark",
     "last_name"=> "Kent"
 );
-$response = $client->setProfile($id, $platformUser, $data);
+$response = $client->setProfile($id, $data, $platformUser);
 ```
 
 Parameters:
