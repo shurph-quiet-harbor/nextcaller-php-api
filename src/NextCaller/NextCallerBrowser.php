@@ -14,13 +14,20 @@ class NextCallerBrowser
     /** @var Client client */
     protected $client;
 
+    /**
+     * @param Client $client
+     */
     public function __construct(Client $client = null) {
         if (empty($client)) {
             $client = new Client();
+            $client->setUserAgent(DEFAULT_USER_AGENT);
         }
         $this->client = $client;
     }
 
+    /**
+     * @return Client
+     */
     public function getClient() {
         return $this->client;
     }
@@ -45,14 +52,24 @@ class NextCallerBrowser
         return $this;
     }
 
+    /**
+     * @param string $url
+     * @param array $query
+     * @param array $headers
+     * @return \Guzzle\Http\Message\Request
+     */
     public function get($url, $query = array(), $headers = array()) {
         $request = $this->client->get($url, $this->buildHeaders($headers), $this->buildOptions($query));
         $request->setAuth($this->user, $this->password);
         return $request;
     }
 
-    public function buildHeaders($headers) {
-        return array('Content-Type' => 'application/json') + $headers;
+    /**
+     * @param array $headers
+     * @return array
+     */
+    public function buildHeaders($headers = array()) {
+        return array('Content-Type' => JSON_CONTENT_TYPE) + $headers;
     }
 
     /**
@@ -71,6 +88,13 @@ class NextCallerBrowser
         );
     }
 
+    /**
+     * @param string $url
+     * @param array $query
+     * @param string $content
+     * @param array $headers
+     * @return \Guzzle\Http\Message\Request
+     */
     public function post($url, $query = array(), $content = '', $headers = array()) {
         $request = $this->client->post($url, $this->buildHeaders($headers), $content, $this->buildOptions($query));
         $request->setAuth($this->user, $this->password);

@@ -13,7 +13,7 @@ $platformUsername = 'user1';
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $client->setProfile($id, $data, $platformUsername);
+    $client->setProfile($id, $platformUsername, $data);
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 422
