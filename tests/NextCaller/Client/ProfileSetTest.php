@@ -11,7 +11,6 @@ class ProfileSetTest extends \PHPUnit_Framework_TestCase
     "last_name": "Kent"
 }';
     const PROFILE_ID = 'c7c17736128033c92771b7f33fead7';
-    const PROFILE_PLATFORM_USER = 'user12345';
 
     public function testProfileArray() {
         $client = new NextCallerClient(null, null, true);

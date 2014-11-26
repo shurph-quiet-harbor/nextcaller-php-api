@@ -38,6 +38,19 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
         $this->fail('An expected exception has not been raised.');
     }
 
+    public function testWrongPhone() {
+        $client = new NextCallerClient(null, null, true);
+        try {
+            $client->getProfileByPhone('69255583865');
+        } catch (BadResponseException $expected) {
+            $this->assertEquals(400, $expected->getResponse()->getStatusCode());
+            $this->assertEquals(555, $expected->getCode());
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
+    }
+
     public function testNotValid() {
         $client = new NextCallerClient(null, null, true);
         try {

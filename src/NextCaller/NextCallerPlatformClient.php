@@ -5,7 +5,7 @@ namespace NextCaller;
 use NextCaller\Exception\FormatException;
 
 
-class NextCallerPlatformClient extends NextCallerClient
+class NextCallerPlatformClient extends NextCallerBaseClient
 {
     /**
      * @param string $user
@@ -22,16 +22,54 @@ class NextCallerPlatformClient extends NextCallerClient
         return parent::__construct($user, $password, $sandbox);
     }
 
-    public function getProfile($id, $platformUsername = null) {
-        return parent::getProfile($id, $platformUsername);
+    /**
+     * @link https://nextcaller.com/platform/documentation/get-profile-id/
+     * @param string $id
+     * @param $platformUsername
+     * @return array
+     * @throws FormatException
+     */
+    public function getProfile($id, $platformUsername) {
+        $request = $this->browser->get('users/' . $id . '/', array('platform_username' => $platformUsername));
+        return $this->proceedResponse($request);
     }
 
-    public function getProfileByPhone($phone, $platformUsername = null) {
-        return parent::getProfileByPhone($phone, $platformUsername);
+    /**
+     * @link https://nextcaller.com/platform/documentation/get-profile/
+     * @param string $phone
+     * @param null $platformUsername
+     * @return array
+     * @throws FormatException
+     */
+    public function getProfileByPhone($phone, $platformUsername) {
+        $request = $this->browser->get('records/', array('phone' => $phone, 'platform_username' => $platformUsername));
+        return $this->proceedResponse($request);
     }
 
-    public function setProfile($id, $data, $platformUsername = null) {
-        return parent::setProfile($id, $data, $platformUsername);
+    /**
+     * @link https://nextcaller.com/platform/documentation/post-profile/
+     * @param string $id
+     * @param array $data
+     * @param string $platformUsername
+     * @return array
+     */
+    public function setProfile($id, $platformUsername, $data) {
+        $url = 'users/' . $id . '/';
+        $response = $this->browser->post($url, array('platform_username' => $platformUsername), json_encode($data));
+        return $this->proceedResponse($response);
+    }
+
+    /**
+     * @link https://nextcaller.com/platform/documentation/get-fraud-level/
+     * @param $phone
+     * @param $platformUsername
+     * @return array
+     * @throws Exception\BadResponseException
+     * @throws FormatException
+     */
+    public function getFraudLevel($phone, $platformUsername) {
+        $response = $this->browser->get('fraud/', array('phone' => $phone, 'platform_username' => $platformUsername));
+        return $this->proceedResponse($response);
     }
 
     /**
@@ -69,8 +107,8 @@ class NextCallerPlatformClient extends NextCallerClient
      * @internal param $array
      */
     public function updatePlatformUser($platformUsername, $data) {
-        $response =
-            $this->browser->post('platform_users/' . urlencode($platformUsername) . '/', array(), json_encode($data));
+        $url = 'platform_users/' . urlencode($platformUsername) . '/';
+        $response = $this->browser->post($url, array(), json_encode($data));
         return $this->proceedResponse($response);
     }
 
