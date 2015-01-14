@@ -78,8 +78,8 @@ class NextCallerPlatformClient extends NextCallerBaseClient
      * @throws Exception\BadResponseException
      * @throws FormatException
      */
-    public function getPlatformStatistics() {
-        $response = $this->browser->get('platform_users/');
+    public function getPlatformStatistics($page=1) {
+        $response = $this->browser->get('platform_users/', array('page' => $page));
         return $this->proceedResponse($response);
     }
 
