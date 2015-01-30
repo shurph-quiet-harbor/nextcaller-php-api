@@ -23,31 +23,49 @@ class NextCallerPlatformClient extends NextCallerBaseClient
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/get-profile-id/
+     * @link https://nextcaller.com/platform/documentation/#/get-profile/get-profile-id/php
      * @param string $id
      * @param $platformUsername
      * @return array
      * @throws FormatException
      */
     public function getProfile($id, $platformUsername) {
-        $request = $this->browser->get('users/' . $id . '/', array('platform_username' => $platformUsername));
+        $params = array('platform_username' => $platformUsername);
+        $request = $this->browser->get('users/' . $id . '/', $params);
         return $this->proceedResponse($request);
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/get-profile/
+     * @link https://nextcaller.com/platform/documentation/#/get-profile/get-profile-phone/php
      * @param string $phone
      * @param null $platformUsername
      * @return array
      * @throws FormatException
      */
     public function getProfileByPhone($phone, $platformUsername) {
-        $request = $this->browser->get('records/', array('phone' => $phone, 'platform_username' => $platformUsername));
+        $params = array(
+            'phone' => $phone, 'platform_username' => $platformUsername
+        );
+        $request = $this->browser->get('records/', $params);
+        return $this->proceedResponse($request);
+    }
+    
+    /**
+     * @link https://nextcaller.com/platform/documentation/#/get-profile/get-profile-name-and-address/php
+     * @param array $nameAddressData
+     * @return array
+     * @throws FormatException
+     */
+    public function getProfileByNameAndAddress($nameAddressData, $platformUsername) {
+        $params = array_merge($nameAddressData, array(
+            'platform_username' => $platformUsername
+        ));
+        $request = $this->browser->get('records/', $params);
         return $this->proceedResponse($request);
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/post-profile/
+     * @link https://nextcaller.com/platform/documentation/#/post-profile/php
      * @param string $id
      * @param array $data
      * @param string $platformUsername
@@ -55,12 +73,13 @@ class NextCallerPlatformClient extends NextCallerBaseClient
      */
     public function setProfile($id, $platformUsername, $data) {
         $url = 'users/' . $id . '/';
-        $response = $this->browser->post($url, array('platform_username' => $platformUsername), json_encode($data));
+        $params = array('platform_username' => $platformUsername);
+        $response = $this->browser->post($url, $params, json_encode($data));
         return $this->proceedResponse($response);
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/get-fraud-level/
+     * @link https://nextcaller.com/platform/documentation/#/get-fraud-level/php
      * @param $phone
      * @param $platformUsername
      * @return array
@@ -73,7 +92,7 @@ class NextCallerPlatformClient extends NextCallerBaseClient
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/get-summary/
+     * @link https://nextcaller.com/platform/documentation/#/get-summary/php
      * @return array
      * @throws Exception\BadResponseException
      * @throws FormatException
@@ -84,7 +103,7 @@ class NextCallerPlatformClient extends NextCallerBaseClient
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/get-platform-user/
+     * @link https://nextcaller.com/platform/documentation/#/get-platform-user/php
      * @param $platformUsername
      * @return array
      * @throws Exception\BadResponseException
@@ -97,7 +116,7 @@ class NextCallerPlatformClient extends NextCallerBaseClient
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/post-platform-user/
+     * @link https://nextcaller.com/platform/documentation/#/post-platform-user/php
      * @param $platformUsername
      * @param $data
      * @return array
