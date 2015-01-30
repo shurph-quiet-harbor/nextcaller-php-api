@@ -1,6 +1,6 @@
 <?php
 
-namespace NextCaller\Test\ClientMocker;
+namespace NextCaller\Test\PlatformClientMocker;
 
 use NextCaller\NextCallerPlatformClient;
 
