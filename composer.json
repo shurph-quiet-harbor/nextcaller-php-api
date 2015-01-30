@@ -2,7 +2,7 @@
     "name": "nextcaller/nextcaller-php-api",
     "description": "Client for Next Caller API",
     "type": "library",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "authors": [],
     "keywords": [
         "Next Caller",

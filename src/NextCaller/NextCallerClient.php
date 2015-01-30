@@ -5,7 +5,7 @@ namespace NextCaller;
 class NextCallerClient extends NextCallerBaseClient
 {
     /**
-     * @link https://nextcaller.com/documentation/#/get-profile/php
+     * @link https://nextcaller.com/documentation/#/get-profile/get-profile-id/php
      * @param string $id
      * @return array
      * @throws FormatException
@@ -16,13 +16,24 @@ class NextCallerClient extends NextCallerBaseClient
     }
 
     /**
-     * @link https://nextcaller.com/documentation/#/get-profile/php
+     * @link https://nextcaller.com/documentation/#/get-profile/get-profile-phone/php
      * @param string $phone
      * @return array
      * @throws FormatException
      */
     public function getProfileByPhone($phone) {
         $request = $this->browser->get('records/', array('phone' => $phone));
+        return $this->proceedResponse($request);
+    }
+    
+    /**
+     * @link https://nextcaller.com/documentation/#/get-profile/get-profile-name-and-address/php
+     * @param array $nameAddressData
+     * @return array
+     * @throws FormatException
+     */
+    public function getProfileByNameAndAddress($nameAddressData) {
+        $request = $this->browser->get('records/', $nameAddressData);
         return $this->proceedResponse($request);
     }
 
