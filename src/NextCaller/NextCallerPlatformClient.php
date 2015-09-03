@@ -31,7 +31,7 @@ class NextCallerPlatformClient extends NextCallerBaseClient
     protected function compileAccountIdHeaders($account_id = NULL){
         $headers = array();
         if($account_id){
-            $headers = array('Nc-Account-Id' => $account_id);
+            $headers = array(NC_ACCOUNT_ID => $account_id);
         }
         return $headers;
     }

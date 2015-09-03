@@ -63,7 +63,8 @@ abstract class NextCallerBaseClient
         }
         $result = json_decode($body, true);
         if ($result === null) {
-            throw new FormatException('JSON parse error', 1, null, $request, $response);
+            # When response is just a sting.
+            $result = $body;
         }
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
             return $result;

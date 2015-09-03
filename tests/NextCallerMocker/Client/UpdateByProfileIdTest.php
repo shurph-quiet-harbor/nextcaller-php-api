@@ -4,7 +4,7 @@ namespace NextCaller\Test\ClientMocker;
 
 use NextCaller\NextCallerClient;
 
-class ProfileSetTest extends \PHPUnit_Framework_TestCase
+class UpdateByProfileIdTest extends \PHPUnit_Framework_TestCase
 {
     const JSON_DATA = '{
     "first_name": "Clark",
@@ -26,7 +26,7 @@ class ProfileSetTest extends \PHPUnit_Framework_TestCase
         self::$mock = $mocker;
     }
 
-    public function testProfileArray() {
+    public function testUpdateByProfileId() {
         $client = self::$client;
         $data = json_decode(self::JSON_DATA, true);
         $response = $client->updateByProfileId(self::PROFILE_ID, $data);
