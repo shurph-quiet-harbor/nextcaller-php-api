@@ -2,7 +2,7 @@
 
 require(__DIR__ . '/vendor/autoload.php');
 
-use NextCaller\NextCallerClient;
+use NextCaller\NextCallerPlatformClient;
 
 $user = "";
 $password = "";
@@ -14,11 +14,12 @@ $nameAddressData = array(
     'state' => 'NY',
     'zip_code' => '10024'
 );
+$accountId = 'user1';
 $sandbox = false;
 
-$client = new NextCallerClient($user, $password, $sandbox);
+$client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $records = $client->getByNameAddress($nameAddressData);
+    $records = $client->getByNameAddress($nameAddressData, $accountId);
     /* array(
         'id' => '97d949a413f4ea8b85e9586e1f2d9a',
         'first_name' => 'Jerry',
@@ -109,6 +110,9 @@ try {
         'resource_uri' => '/v2/users/97d949a413f4ea8b85e9586e1f2d9a/',
     ); */
     var_dump($records);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 555

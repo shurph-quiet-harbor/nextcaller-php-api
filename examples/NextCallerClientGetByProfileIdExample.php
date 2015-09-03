@@ -59,6 +59,9 @@ try {
         'resource_uri' => '/v2/users/c7c17736128033c92771b7f33fead7/',
     );*/
     var_dump($profile);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 555

@@ -16,25 +16,25 @@ try {
         array(
             array
             (
-                'username' => 'user1',
+                'id' => 'user1',
                 'first_name' => 'user1_fname',
                 'last_name' => 'user1_lname',
                 'company_name' => 'company1_name',
                 'email' => 'email@company1.com',
                 'number_of_operations' => '15',
-                'total_calls' => array('2014-11' => '15'),
-                'successful_calls' => array('2014-11' => '15'),
+                'total_operations' => array('2014-11' => '15'),
+                'billed_operations' => array('2014-11' => '15'),
                 'resource_uri' => '/v2/platform_users/user1/',
             ),
             array(
-                'username' => 'user2',
+                'id' => 'user2',
                 'first_name' => '',
                 'last_name' => '',
                 'company_name' => '',
                 'email' => '',
                 'number_of_operations' => '1',
-                'total_calls' => array('2014-11' => '1'),
-                'successful_calls' => array('2014-11' => '1',),
+                'total_operations' => array('2014-11' => '1'),
+                'billed_operations' => array('2014-11' => '1',),
                 'resource_uri' => '/v2/platform_users/user2/',
             ),
             ............
@@ -47,6 +47,9 @@ try {
     );
     */
     var_dump($statistic);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 555

@@ -6,26 +6,50 @@ use NextCaller\NextCallerPlatformClient;
 
 $user = "";
 $password = "";
-$platformUsername = 'user1';
+$id = 'e79ba4dab9cdd3da41c95efd734ec5b';
+$accountId = 'user1';
 $sandbox = true;
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $platformUser = $client->getPlatformAccount($platformUsername);
+    $profile = $client->getByProfileId($id, $accountId);
     /*
     array(
-        'username' => 'user1',
-        'first_name' => 'user1_fname',
-        'last_name' => 'user1_lname',
-        'company_name' => 'company1_name',
-        'email' => 'email@company1.com',
-        'number_of_operations' => '15',
-        'total_calls' => array('2014 - 11' => '15'),
-        'successful_calls' => array('2014 - 11' => '15'),
-        'resource_uri' => '/v2/platform_users/user1/'
+        'id' => 'e79ba4dab9cdd3da41c95ef734ec5b',
+        'first_name' => 'Miguel',
+        'middle_name' => '',
+        'last_name' => 'Meneses',
+        'name' => 'Miguel Meneses',
+        'language' => 'English',
+        'phone' => array(
+            array(
+                'number' => '6925558386',
+                'resource_uri' => '/v2/records/6925558386/',
+            )
+        ),
+
+        'carrier' => 'AT & T',
+        'address' => array(
+            array(
+                'city' => 'Winnetka',
+                'extended_zip' => '1511',
+                'country' => 'USA',
+                'line1' => 'Hackney St',
+                'line2' => '',
+                'state' => 'CA',
+                'zip_code' => '91306',
+            )
+        ),
+
+        'line_type' => 'Mobile',
+        'department' => 'not specified',
+        'resource_uri' => '/v2/users/e79ba4dab9cdd3da41c95ef734ec5b/'
     );
     */
-    var_dump($platformUser);
+    var_dump($profile);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 558
