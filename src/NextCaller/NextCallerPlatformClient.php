@@ -21,113 +21,151 @@ class NextCallerPlatformClient extends NextCallerBaseClient
         }
         return parent::__construct($user, $password, $sandbox);
     }
+    
+    /**
+     * Create array with Nc-Account-Id header if $accountId was provided
+     * 
+     * @param string $accountId
+     * @return array
+     */
+    protected function compileAccountIdHeaders($accountId = NULL){
+        $headers = array();
+        if($accountId){
+            $headers = array(NC_ACCOUNT_ID => $accountId);
+        }
+        return $headers;
+    }
 
     /**
      * @link https://nextcaller.com/platform/documentation/#/get-profile/get-profile-id/php
      * @param string $id
-     * @param $platformUsername
+     * @param string $accountId
      * @return array
      * @throws FormatException
      */
-    public function getProfile($id, $platformUsername) {
-        $params = array('platform_username' => $platformUsername);
-        $request = $this->browser->get('users/' . $id . '/', $params);
+    public function getByProfileId($id, $accountId = NULL) {
+        $headers = $this->compileAccountIdHeaders($accountId);
+        $request = $this->browser->get('users/' . $id . '/', array(), $headers);
         return $this->proceedResponse($request);
     }
 
     /**
      * @link https://nextcaller.com/platform/documentation/#/get-profile/get-profile-phone/php
      * @param string $phone
-     * @param null $platformUsername
+     * @param string $accountId
      * @return array
      * @throws FormatException
      */
-    public function getProfileByPhone($phone, $platformUsername) {
-        $params = array(
-            'phone' => $phone, 'platform_username' => $platformUsername
-        );
-        $request = $this->browser->get('records/', $params);
+    public function getByPhone($phone, $accountId = NULL) {
+        $headers = $this->compileAccountIdHeaders($accountId);
+        $params = array('phone' => $phone);
+        $request = $this->browser->get('records/', $params, $headers);
         return $this->proceedResponse($request);
     }
     
     /**
      * @link https://nextcaller.com/platform/documentation/#/get-profile/get-profile-name-and-address/php
      * @param array $nameAddressData
+     * @param string $accountId
      * @return array
      * @throws FormatException
      */
-    public function getProfileByNameAndAddress($nameAddressData, $platformUsername) {
-        $params = array_merge($nameAddressData, array(
-            'platform_username' => $platformUsername
-        ));
-        $request = $this->browser->get('records/', $params);
+    public function getByNameAddress($nameAddressData, $accountId = NULL) {
+        $headers = $this->compileAccountIdHeaders($accountId);
+        $request = $this->browser->get('records/', $nameAddressData, $headers);
         return $this->proceedResponse($request);
     }
-
+    
+    /**
+     * @link https://nextcaller.com/platform/documentation/#/profiles/get-profile-email/php
+     * @param string $email
+     * @param string $accountId
+     * @return array
+     * @throws FormatException
+     */
+    public function getByEmail($email, $accountId = NULL) {
+        $headers = $this->compileAccountIdHeaders($accountId);
+        $params = array('email' => $email);
+        $request = $this->browser->get('records/', $params, $headers);
+        return $this->proceedResponse($request);
+    }
+    
     /**
      * @link https://nextcaller.com/platform/documentation/#/post-profile/php
      * @param string $id
      * @param array $data
-     * @param string $platformUsername
+     * @param string $accountId
      * @return array
      */
-    public function setProfile($id, $platformUsername, $data) {
+    public function updateByProfileId($id, $data, $accountId = NULL) {
         $url = 'users/' . $id . '/';
-        $params = array('platform_username' => $platformUsername);
-        $response = $this->browser->post($url, $params, json_encode($data));
+        $headers = $this->compileAccountIdHeaders($accountId);
+        $response = $this->browser->post($url, array(), json_encode($data), $headers);
         return $this->proceedResponse($response);
     }
 
     /**
      * @link https://nextcaller.com/platform/documentation/#/get-fraud-level/php
      * @param $phone
-     * @param $platformUsername
+     * @param $accountId
      * @return array
      * @throws Exception\BadResponseException
      * @throws FormatException
      */
-    public function getFraudLevel($phone, $platformUsername) {
-        $response = $this->browser->get('fraud/', array('phone' => $phone, 'platform_username' => $platformUsername));
+    public function getFraudLevel($phone, $accountId = NULL) {
+        $headers = $this->compileAccountIdHeaders($accountId);
+        $params = array('phone' => $phone);
+        $response = $this->browser->get('fraud/', $params, $headers);
         return $this->proceedResponse($response);
     }
 
     /**
      * @link https://nextcaller.com/platform/documentation/#/get-summary/php
+     * @param int $page
      * @return array
      * @throws Exception\BadResponseException
      * @throws FormatException
      */
-    public function getPlatformStatistics($page=1) {
-        $response = $this->browser->get('platform_users/', array('page' => $page));
+    public function getPlatformStatistics($page = 1) {
+        $response = $this->browser->get('accounts/', array('page' => $page));
         return $this->proceedResponse($response);
     }
 
     /**
      * @link https://nextcaller.com/platform/documentation/#/get-platform-user/php
-     * @param $platformUsername
+     * @param string $accountId
      * @return array
      * @throws Exception\BadResponseException
      * @throws FormatException
-     * @internal param string $phone
      */
-    public function getPlatformUser($platformUsername) {
-        $request = $this->browser->get('platform_users/' . urlencode($platformUsername) . '/');
+    public function getPlatformAccount($accountId) {
+        $request = $this->browser->get('accounts/' . urlencode($accountId) . '/');
         return $this->proceedResponse($request);
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/#/post-platform-user/php
-     * @param $platformUsername
-     * @param $data
+     * @link https://nextcaller.com/platform/documentation/#/accounts/post-platform-account/php
+     * @param array $data
      * @return array
      * @throws Exception\BadResponseException
      * @throws FormatException
-     * @internal param string $id
-     * @internal param $array
      */
-    public function updatePlatformUser($platformUsername, $data) {
-        $url = 'platform_users/' . urlencode($platformUsername) . '/';
-        $response = $this->browser->post($url, array(), json_encode($data));
+    public function createPlatformAccount($data) {
+        $response = $this->browser->post('accounts/', array(), json_encode($data));
+        return $this->proceedResponse($response);
+    }
+    
+    /**
+     * @link https://nextcaller.com/platform/documentation/#/post-platform-user/php
+     * @param string $accountId
+     * @param array $data
+     * @return array
+     * @throws Exception\BadResponseException
+     * @throws FormatException
+     */
+    public function updatePlatformAccount($accountId, $data) {
+        $url = 'accounts/' . urlencode($accountId) . '/';
+        $response = $this->browser->put($url, array(), json_encode($data));
         return $this->proceedResponse($response);
     }
 

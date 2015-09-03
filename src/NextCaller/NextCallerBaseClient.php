@@ -6,6 +6,7 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
 use Guzzle\Http\Message\Request;
 use NextCaller\Exception\BadResponseException;
 use NextCaller\Exception\FormatException;
+use NextCaller\Exception\RateLimitException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class NextCallerBaseClient
@@ -62,7 +63,8 @@ abstract class NextCallerBaseClient
         }
         $result = json_decode($body, true);
         if ($result === null) {
-            throw new FormatException('JSON parse error', 1, null, $request, $response);
+            # When response is just a sting.
+            $result = $body;
         }
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
             return $result;
@@ -70,7 +72,12 @@ abstract class NextCallerBaseClient
         if (!$result || !$result['error']) {
             throw new FormatException('Not valid error response', 3, null, $request, $response);
         }
-        $e = new BadResponseException($result['error']['message'], $result['error']['code'], null, $request, $response);
+        $message = $result['error']['message'];
+        $code = $result['error']['code'];
+        if ($response->getStatusCode() == 429) {
+            throw new RateLimitException($message, $code, null, $request, $response);
+        }
+        $e = new BadResponseException($message, $code, null, $request, $response);
         $e->setError($result['error']);
         throw $e;
     }

@@ -2,18 +2,22 @@
 
 require(__DIR__ . '/vendor/autoload.php');
 
-use NextCaller\NextCallerPlatformClient;
+use NextCaller\NextCallerClient;
 
 $user = "";
 $password = "";
 $id = "c7c17736128033c92771b7f33fead7";
 $sandbox = true;
-$data = array("email" => 'xxx');
-$platformUsername = 'user1';
+$data = array(
+    "email" => 'xxx'
+);
 
-$client = new NextCallerPlatformClient($user, $password, $sandbox);
+$client = new NextCallerClient($user, $password, $sandbox);
 try {
-    $client->setProfile($id, $platformUsername, $data);
+    $client->updateByProfileId($id, $data);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 422

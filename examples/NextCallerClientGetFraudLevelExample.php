@@ -8,12 +8,12 @@ $user = "";
 $password = "";
 $id = "c7c17736128033c92771b7f33fead7";
 $phone = '6925558386';
-$platformUsername = 'user1';
+$accountId = 'user1';
 $sandbox = true;
 
 $client = new NextCallerClient($user, $password, $sandbox);
 try {
-    $fraudLevel = $client->getFraudLevel($phone, $platformUsername);
+    $fraudLevel = $client->getFraudLevel($phone, $accountId);
     /*
     array(
         'spoofed' => 'unknown',
@@ -21,6 +21,9 @@ try {
     );
     */
     var_dump($fraudLevel);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 555

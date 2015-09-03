@@ -3,6 +3,7 @@
 namespace NextCaller\Test\Mocker;
 
 use NextCaller\Exception\BadResponseException;
+use NextCaller\Exception\RateLimitException;
 use NextCaller\NextCallerClient;
 
 class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
@@ -28,6 +29,13 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
         $mocker->addResponse(new \Guzzle\Http\Message\Response(400,
             array(),
             '{"error": {"message": "Validation Error", "code": "422", "type": "Unprocessable Entity", "description": {"email": ["Invalid email address"]}}}'));
+        $mocker->addResponse(new \Guzzle\Http\Message\Response(429,
+            array(
+                'X-Rate-Limit-Limit' => '7',
+                'X-Rate-Limit-Remaining' => '0',
+                'X-Rate-Limit-Reset' => '1441286043',
+            ),
+            '{"error": {"message": "API calls per second limit is exceeded.", "code": "1061", "type": "Too Many Requests"}}'));
         $client->addSubscriber($mocker);
         self::$client = $client;
         self::$mock = $mocker;
@@ -41,7 +49,7 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
     public function testWrongFormat() {
         $client = self::$client;
         try {
-            $client->getProfile(self::PROFILE_ID_WRONG_FORMAT);
+            $client->getByProfileId(self::PROFILE_ID_WRONG_FORMAT);
         } catch (BadResponseException $expected) {
             $this->assertEquals(404, $expected->getResponse()->getStatusCode());
             $this->assertEquals(404, $expected->getCode());
@@ -54,7 +62,7 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
     public function testWrongId() {
         $client = self::$client;
         try {
-            $client->getProfile(self::PROFILE_ID_WRONG);
+            $client->getByProfileId(self::PROFILE_ID_WRONG);
         } catch (BadResponseException $expected) {
             $this->assertEquals(400, $expected->getResponse()->getStatusCode());
             $this->assertEquals(558, $expected->getCode());
@@ -67,10 +75,25 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
     public function testNotValid() {
         $client = self::$client;
         try {
-            $client->setProfile(self::PROFILE_ID, array('email' => 'XXXXXXXXXXXX'));
+            $client->updateByProfileId(self::PROFILE_ID, array('email' => 'XXXXXXXXXXXX'));
         } catch (BadResponseException $expected) {
             $this->assertEquals(400, $expected->getResponse()->getStatusCode());
             $this->assertEquals(422, $expected->getCode());
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
+    }
+    
+    public function testRateLimit() {
+        $client = self::$client;
+        try {
+            $client->updateByProfileId(self::PROFILE_ID, array('email' => 'XXXXXXXXXXXX'));
+        } catch (RateLimitException $expected) {
+            $this->assertEquals(429, $expected->getResponse()->getStatusCode());
+            $this->assertEquals(1061, $expected->getCode());
+            $this->assertEquals('7', $expected->getRateLimit());
+            $this->assertEquals('1441286043', $expected->getResetTime());
             return;
         }
 

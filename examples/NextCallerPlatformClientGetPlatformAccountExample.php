@@ -6,12 +6,12 @@ use NextCaller\NextCallerPlatformClient;
 
 $user = "";
 $password = "";
-$platformUsername = 'user1';
+$accountId = 'user1';
 $sandbox = true;
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $platformUser = $client->getPlatformUser($platformUsername);
+    $platformUser = $client->getPlatformAccount($accountId);
     /*
     array(
         'username' => 'user1',
@@ -20,12 +20,15 @@ try {
         'company_name' => 'company1_name',
         'email' => 'email@company1.com',
         'number_of_operations' => '15',
-        'total_calls' => array('2014 - 11' => '15'),
-        'successful_calls' => array('2014 - 11' => '15'),
+        'total_operations' => array('2014 - 11' => '15'),
+        'billed_operations' => array('2014 - 11' => '15'),
         'resource_uri' => '/v2/platform_users/user1/'
     );
     */
     var_dump($platformUser);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 558

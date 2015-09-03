@@ -18,7 +18,7 @@ class ProfileGetByNameAddressTest extends \PHPUnit_Framework_TestCase
             'zip_code' => '10024'
         );
         $client = new NextCallerClient(null, null, true);
-        $profiles = $client->getProfileByNameAndAddress($nameAddressData);
+        $profiles = $client->getByNameAddress($nameAddressData);
         $this->assertEquals($profiles, json_decode(self::JSON_RESPONSE,true));
     }
 }

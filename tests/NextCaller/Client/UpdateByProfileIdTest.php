@@ -4,7 +4,7 @@ namespace NextCaller\Test;
 
 use NextCaller\NextCallerClient;
 
-class ProfileSetTest extends \PHPUnit_Framework_TestCase
+class UpdateByProfileIdTest extends \PHPUnit_Framework_TestCase
 {
     const JSON_DATA = '{
     "first_name": "Clark",
@@ -12,10 +12,10 @@ class ProfileSetTest extends \PHPUnit_Framework_TestCase
 }';
     const PROFILE_ID = 'c7c17736128033c92771b7f33fead7';
 
-    public function testProfileArray() {
+    public function testUpdateByProfileId() {
         $client = new NextCallerClient(null, null, true);
         $data = json_decode(self::JSON_DATA, true);
-        $response = $client->setProfile(self::PROFILE_ID, $data);
+        $response = $client->updateByProfileId(self::PROFILE_ID, $data);
         $this->assertEquals($response, null);
     }
 

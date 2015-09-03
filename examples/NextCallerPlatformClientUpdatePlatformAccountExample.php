@@ -6,36 +6,32 @@ use NextCaller\NextCallerPlatformClient;
 
 $user = "";
 $password = "";
-$id = "c7c17736128033c92771b7f33fead7";
-$phone = '6925558386';
 $accountId = 'user1';
 $sandbox = true;
+$data = array('email' => 'xxx');
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $fraudLevel = $client->getFraudLevel($phone, $accountId);
-    /*
-    array(
-        'spoofed' => 'unknown',
-        'fraud_risk' => 'medium'
-    );
-    */
-    var_dump($fraudLevel);
+    $client->updatePlatformAccount($accountId, $data);
 } catch (\NextCaller\Exception\RateLimitException $e) {
     var_dump($e->getRateLimit());
     var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
-    // 555
+    // 422
     var_dump($e->getCode());
-    // The number you have entered is invalid. Please ensure your number contains 10 digits.
+    // Validation Error
     var_dump($e->getMessage());
-    /* array(
-     *      "message" => "The number you have entered is invalid. Please ensure your number contains 10 digits.",
-     *      "code" => "555",
-     *      "type" => "Bad Request"
-     * );
-     * */
+    /*
+     array(
+        'message' => 'Validation Error',
+        'code' => '422',
+        'type' => 'Unprocessable Entity',
+        'description' => array(
+            'email' => array('Invalid email address')
+        )
+    );
+    */
     var_dump($e->getError());
     /** @var \Guzzle\Http\Message\Request $request */
     $request = $e->getRequest();

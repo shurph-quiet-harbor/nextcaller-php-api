@@ -9,7 +9,7 @@ class GetFraudLevelTest extends \PHPUnit_Framework_TestCase
     const JSON_RESPONSE = '{"spoofed": "unknown","fraud_risk": "medium"}';
 
     const PROFILE_PHONE = '2125558383';
-    const PLATFORM_USERNAME = 'user12345';
+    const PLATFORM_ACCOUNT_ID = 'user12345';
 
     protected static $mock;
     /** @var  NextCallerClient client */
@@ -26,7 +26,7 @@ class GetFraudLevelTest extends \PHPUnit_Framework_TestCase
 
     public function testGetFraudLevel() {
         $client = self::$client;
-        $profile = $client->getFraudLevel(self::PROFILE_PHONE, self::PLATFORM_USERNAME);
+        $profile = $client->getFraudLevel(self::PROFILE_PHONE, self::PLATFORM_ACCOUNT_ID);
         $this->assertEquals($profile, json_decode(self::JSON_RESPONSE, true));
     }
 

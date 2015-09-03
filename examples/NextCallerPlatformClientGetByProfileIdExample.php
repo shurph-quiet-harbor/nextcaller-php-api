@@ -7,12 +7,12 @@ use NextCaller\NextCallerPlatformClient;
 $user = "";
 $password = "";
 $id = 'e79ba4dab9cdd3da41c95efd734ec5b';
-$platformUsername = 'user1';
+$accountId = 'user1';
 $sandbox = true;
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $profile = $client->getProfile($id, $platformUsername);
+    $profile = $client->getByProfileId($id, $accountId);
     /*
     array(
         'id' => 'e79ba4dab9cdd3da41c95ef734ec5b',
@@ -47,6 +47,9 @@ try {
     );
     */
     var_dump($profile);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 558

@@ -11,7 +11,7 @@ $sandbox = true;
 
 $client = new NextCallerClient($user, $password, $sandbox);
 try {
-    $records = $client->getProfileByPhone($phoneNumber);
+    $records = $client->getByPhone($phoneNumber);
     /*
     array(
         'records' => array(
@@ -71,6 +71,9 @@ try {
         )
     );*/
     var_dump($records);
+} catch (\NextCaller\Exception\RateLimitException $e) {
+    var_dump($e->getRateLimit());
+    var_dump($e->getResetTime());
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 555
