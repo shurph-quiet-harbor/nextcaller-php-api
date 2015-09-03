@@ -100,5 +100,19 @@ class NextCallerBrowser
         $request->setAuth($this->user, $this->password);
         return $request;
     }
+    
+    
+    /**
+     * @param string $url
+     * @param array $query
+     * @param string $content
+     * @param array $headers
+     * @return \Guzzle\Http\Message\Request
+     */
+    public function put($url, $query = array(), $content = '', $headers = array()) {
+        $request = $this->client->put($url, $this->buildHeaders($headers), $content, $this->buildOptions($query));
+        $request->setAuth($this->user, $this->password);
+        return $request;
+    }
 
 }

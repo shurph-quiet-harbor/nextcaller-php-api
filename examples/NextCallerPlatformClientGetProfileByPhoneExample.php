@@ -12,7 +12,7 @@ $sandbox = true;
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $records = $client->getProfileByPhone($phoneNumber, $platformUsername);
+    $records = $client->getByPhone($phoneNumber, $platformUsername);
     /*
     array(
         'records' => array(

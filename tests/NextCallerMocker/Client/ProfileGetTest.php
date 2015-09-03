@@ -24,7 +24,7 @@ class ProfileGetTest extends \PHPUnit_Framework_TestCase
 
     public function testGetByProfileId() {
         $client = self::$client;
-        $profile = $client->getProfile(self::PROFILE_ID);
+        $profile = $client->getByProfileId(self::PROFILE_ID);
         $this->assertEquals($profile, json_decode(self::JSON_RESPONSE, true));
     }
 

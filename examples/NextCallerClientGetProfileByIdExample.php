@@ -11,7 +11,7 @@ $sandbox = true;
 
 $client = new NextCallerClient($user, $password, $sandbox);
 try {
-    $profile = $client->getProfile($id);
+    $profile = $client->getByProfileId($id);
     /* array(
         'id' => 'c7c17736128033c92771b7f33fead7',
         'first_name' => 'James',

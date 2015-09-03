@@ -10,7 +10,7 @@ class NextCallerClient extends NextCallerBaseClient
      * @return array
      * @throws FormatException
      */
-    public function getProfile($id) {
+    public function getByProfileId($id) {
         $request = $this->browser->get('users/' . $id . '/');
         return $this->proceedResponse($request);
     }
@@ -21,7 +21,7 @@ class NextCallerClient extends NextCallerBaseClient
      * @return array
      * @throws FormatException
      */
-    public function getProfileByPhone($phone) {
+    public function getByPhone($phone) {
         $request = $this->browser->get('records/', array('phone' => $phone));
         return $this->proceedResponse($request);
     }
@@ -32,8 +32,19 @@ class NextCallerClient extends NextCallerBaseClient
      * @return array
      * @throws FormatException
      */
-    public function getProfileByNameAndAddress($nameAddressData) {
+    public function getByNameAddress($nameAddressData) {
         $request = $this->browser->get('records/', $nameAddressData);
+        return $this->proceedResponse($request);
+    }
+    
+    /**
+     * @link https://nextcaller.com/documentation/#/profiles/retrieve-profile-email/php
+     * @param string $email
+     * @return array
+     * @throws FormatException
+     */
+    public function getByEmail($email) {
+        $request = $this->browser->get('records/', array('email' => $email));
         return $this->proceedResponse($request);
     }
 
@@ -43,7 +54,7 @@ class NextCallerClient extends NextCallerBaseClient
      * @param array $data
      * @return array
      */
-    public function setProfile($id, $data) {
+    public function updateByProfileId($id, $data) {
         $response = $this->browser->post('users/' . $id . '/', array(), json_encode($data));
         return $this->proceedResponse($response);
     }
@@ -51,13 +62,12 @@ class NextCallerClient extends NextCallerBaseClient
     /**
      * @link https://nextcaller.com/documentation/#/get-fraud-level/php
      * @param $phone
-     * @param $platformUsername
      * @return array
      * @throws Exception\BadResponseException
      * @throws FormatException
      */
-    public function getFraudLevel($phone, $platformUsername) {
-        $response = $this->browser->get('fraud/', array('phone' => $phone, 'platform_username' => $platformUsername));
+    public function getFraudLevel($phone) {
+        $response = $this->browser->get('fraud/', array('phone' => $phone));
         return $this->proceedResponse($response);
     }
 }

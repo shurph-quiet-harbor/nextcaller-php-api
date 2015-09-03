@@ -12,7 +12,7 @@ $sandbox = true;
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $profile = $client->getProfile($id, $platformUsername);
+    $profile = $client->getByProfileId($id, $platformUsername);
     /*
     array(
         'id' => 'e79ba4dab9cdd3da41c95ef734ec5b',

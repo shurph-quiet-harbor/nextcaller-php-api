@@ -12,7 +12,7 @@ class ProfileGetTest extends \PHPUnit_Framework_TestCase
 
     public function testGetByProfileId() {
         $client = new NextCallerPlatformClient(null, null, true);
-        $profile = $client->getProfile(self::PROFILE_ID, self::PLATFORM_USERNAME);
+        $profile = $client->getByProfileId(self::PROFILE_ID, self::PLATFORM_USERNAME);
         $this->assertEquals($profile, json_decode(self::JSON_RESPONSE, true));
     }
 

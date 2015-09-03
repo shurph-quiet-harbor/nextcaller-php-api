@@ -14,7 +14,7 @@ $data = array(
 
 $client = new NextCallerClient($user, $password, $sandbox);
 try {
-    $client->setProfile($id, $data);
+    $client->updateByProfileId($id, $data);
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 422

@@ -25,7 +25,7 @@ class GetPlatformUser extends \PHPUnit_Framework_TestCase
 
     public function testGetPlatformUser() {
         $client = self::$client;
-        $data = $client->getPlatformUser(self::PLATFORM_USERNAME);
+        $data = $client->getPlatformAccount(self::PLATFORM_USERNAME);
         $this->assertTrue(!empty($data));
     }
 

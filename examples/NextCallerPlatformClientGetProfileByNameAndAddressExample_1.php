@@ -19,7 +19,7 @@ $sandbox = false;
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $records = $client->getProfileByNameAndAddress($nameAddressData, $platformUsername);
+    $records = $client->getByNameAddress($nameAddressData, $platformUsername);
     /* array(
         'id' => '97d949a413f4ea8b85e9586e1f2d9a',
         'first_name' => 'Jerry',

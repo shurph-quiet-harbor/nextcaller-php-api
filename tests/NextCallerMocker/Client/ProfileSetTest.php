@@ -29,7 +29,7 @@ class ProfileSetTest extends \PHPUnit_Framework_TestCase
     public function testProfileArray() {
         $client = self::$client;
         $data = json_decode(self::JSON_DATA, true);
-        $response = $client->setProfile(self::PROFILE_ID, $data);
+        $response = $client->updateByProfileId(self::PROFILE_ID, $data);
         $this->assertEquals($response, null);
     }
 

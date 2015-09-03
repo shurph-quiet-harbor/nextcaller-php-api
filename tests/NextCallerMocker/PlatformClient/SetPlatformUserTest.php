@@ -27,7 +27,7 @@ class SetPlatformUser extends \PHPUnit_Framework_TestCase
     public function testSetPlatformUser() {
         $client = self::$client;
         $data = json_decode(self::DATA);
-        $result = $client->updatePlatformUser(self::PLATFORM_USERNAME, $data);
+        $result = $client->createPlatformAccount(self::PLATFORM_USERNAME, $data);
         $this->assertEquals($result, null);
     }
 

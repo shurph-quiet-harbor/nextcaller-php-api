@@ -12,7 +12,7 @@ class ProfileGetByPhoneTest extends \PHPUnit_Framework_TestCase
 
     public function testGetByPhone() {
         $client = new NextCallerClient(null, null, true);
-        $profiles = $client->getProfileByPhone(self::PROFILE_PHONE);
+        $profiles = $client->getByPhone(self::PROFILE_PHONE);
         $this->assertEquals($profiles, json_decode(self::JSON_RESPONSE,true));
     }
 }

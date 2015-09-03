@@ -15,7 +15,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
     public function testWrongFormat() {
         $client = new NextCallerClient(null, null, true);
         try {
-            $client->getProfile(self::PROFILE_ID_WRONG_FORMAT);
+            $client->getByProfileId(self::PROFILE_ID_WRONG_FORMAT);
         } catch (BadResponseException $expected) {
             $this->assertEquals(404, $expected->getResponse()->getStatusCode());
             $this->assertEquals(404, $expected->getCode());
@@ -28,7 +28,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
     public function testWrongId() {
         $client = new NextCallerClient(null, null, true);
         try {
-            $client->getProfile(self::PROFILE_ID_WRONG);
+            $client->getByProfileId(self::PROFILE_ID_WRONG);
         } catch (BadResponseException $expected) {
             $this->assertEquals(400, $expected->getResponse()->getStatusCode());
             $this->assertEquals(558, $expected->getCode());
@@ -41,7 +41,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
     public function testWrongPhone() {
         $client = new NextCallerClient(null, null, true);
         try {
-            $client->getProfileByPhone('69255583865');
+            $client->getByPhone('69255583865');
         } catch (BadResponseException $expected) {
             $this->assertEquals(400, $expected->getResponse()->getStatusCode());
             $this->assertEquals(555, $expected->getCode());
@@ -54,7 +54,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
     public function testNotValid() {
         $client = new NextCallerClient(null, null, true);
         try {
-            $client->setProfile(self::PROFILE_ID, array('email' => 'XXXXXXXXXXXX'));
+            $client->updateByProfileId(self::PROFILE_ID, array('email' => 'XXXXXXXXXXXX'));
         } catch (BadResponseException $expected) {
             $this->assertEquals(400, $expected->getResponse()->getStatusCode());
             $this->assertEquals(422, $expected->getCode());

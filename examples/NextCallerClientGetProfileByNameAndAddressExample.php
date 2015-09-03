@@ -18,7 +18,7 @@ $sandbox = false;
 
 $client = new NextCallerClient($user, $password, $sandbox);
 try {
-    $records = $client->getProfileByNameAndAddress($nameAddressData);
+    $records = $client->getByNameAddress($nameAddressData);
     /* array(
         'id' => '97d949a413f4ea8b85e9586e1f2d9a',
         'first_name' => 'Jerry',

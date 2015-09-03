@@ -16,7 +16,7 @@ class ProfileSetTest extends \PHPUnit_Framework_TestCase
     public function testProfileArray() {
         $client = new NextCallerPlatformClient(null, null, true);
         $data = json_decode(self::JSON_DATA, true);
-        $response = $client->setProfile(self::PROFILE_ID, self::PLATFORM_USERNAME, $data);
+        $response = $client->updateByProfileId(self::PROFILE_ID, self::PLATFORM_USERNAME, $data);
         $this->assertEquals($response, null);
     }
 

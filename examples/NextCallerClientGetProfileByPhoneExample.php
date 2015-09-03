@@ -11,7 +11,7 @@ $sandbox = true;
 
 $client = new NextCallerClient($user, $password, $sandbox);
 try {
-    $records = $client->getProfileByPhone($phoneNumber);
+    $records = $client->getByPhone($phoneNumber);
     /*
     array(
         'records' => array(

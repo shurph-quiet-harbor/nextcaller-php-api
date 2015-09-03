@@ -11,7 +11,7 @@ $sandbox = true;
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $platformUser = $client->getPlatformUser($platformUsername);
+    $platformUser = $client->getPlatformAccount($platformUsername);
     /*
     array(
         'username' => 'user1',

@@ -12,7 +12,7 @@ $data = array('email' => 'xxx');
 
 $client = new NextCallerPlatformClient($user, $password, $sandbox);
 try {
-    $client->updatePlatformUser($platformUsername, $data);
+    $client->createPlatformAccount($platformUsername, $data);
 } catch (\NextCaller\Exception\BadResponseException $e) {
     // Example
     // 422

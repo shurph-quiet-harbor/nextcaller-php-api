@@ -41,7 +41,7 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
     public function testWrongFormat() {
         $client = self::$client;
         try {
-            $client->getProfile(self::PROFILE_ID_WRONG_FORMAT);
+            $client->getByProfileId(self::PROFILE_ID_WRONG_FORMAT);
         } catch (BadResponseException $expected) {
             $this->assertEquals(404, $expected->getResponse()->getStatusCode());
             $this->assertEquals(404, $expected->getCode());
@@ -54,7 +54,7 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
     public function testWrongId() {
         $client = self::$client;
         try {
-            $client->getProfile(self::PROFILE_ID_WRONG);
+            $client->getByProfileId(self::PROFILE_ID_WRONG);
         } catch (BadResponseException $expected) {
             $this->assertEquals(400, $expected->getResponse()->getStatusCode());
             $this->assertEquals(558, $expected->getCode());
@@ -67,7 +67,7 @@ class ExceptionsMockerTest extends \PHPUnit_Framework_TestCase
     public function testNotValid() {
         $client = self::$client;
         try {
-            $client->setProfile(self::PROFILE_ID, array('email' => 'XXXXXXXXXXXX'));
+            $client->updateByProfileId(self::PROFILE_ID, array('email' => 'XXXXXXXXXXXX'));
         } catch (BadResponseException $expected) {
             $this->assertEquals(400, $expected->getResponse()->getStatusCode());
             $this->assertEquals(422, $expected->getCode());

@@ -32,7 +32,7 @@ class ProfileGetByNameAddressTest extends \PHPUnit_Framework_TestCase
             'state' => 'NY',
             'zip_code' => '10024'
         );
-        $profiles = $client->getProfileByNameAndAddress($nameAddressData, self::PLATFORM_USERNAME);
+        $profiles = $client->getByNameAddress($nameAddressData, self::PLATFORM_USERNAME);
         $this->assertEquals($profiles, json_decode(self::JSON_RESPONSE, true));
     }
 }
