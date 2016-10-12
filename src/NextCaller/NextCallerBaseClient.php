@@ -69,7 +69,7 @@ abstract class NextCallerBaseClient
         if ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300) {
             return $result;
         }
-        if (!$result || !$result['error']) {
+        if (!$result || !isset($result['error'])) {
             throw new FormatException('Not valid error response', 3, null, $request, $response);
         }
         $message = $result['error']['message'];
