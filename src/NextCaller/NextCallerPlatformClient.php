@@ -105,21 +105,6 @@ class NextCallerPlatformClient extends NextCallerBaseClient
     }
 
     /**
-     * @link https://nextcaller.com/platform/documentation/#/get-fraud-level/php
-     * @param $phone
-     * @param $accountId
-     * @return array
-     * @throws Exception\BadResponseException
-     * @throws FormatException
-     */
-    public function getFraudLevel($phone, $accountId = NULL) {
-        $headers = $this->compileAccountIdHeaders($accountId);
-        $params = array('phone' => $phone);
-        $response = $this->browser->get('fraud/', $params, $headers);
-        return $this->proceedResponse($response);
-    }
-
-    /**
      * @link https://nextcaller.com/platform/documentation/#/get-summary/php
      * @param int $page
      * @return array
