@@ -1,7 +1,7 @@
 <?php
 # default values
 const JSON_RESPONSE_FORMAT = 'json';
-const DEFAULT_USER_AGENT = 'nextcaller/php/1.2';
+const DEFAULT_USER_AGENT = 'nextcaller/php/1.2.1';
 const JSON_CONTENT_TYPE = 'application/json; charset=utf-8';
 
 # urls
