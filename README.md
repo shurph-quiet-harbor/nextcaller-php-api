@@ -9,7 +9,7 @@ A PHP wrapper around the Nextcaller API.
 ## Requirements
 
 - [PHP](http://www.php.net) >= 5.3 **with** [cURL](http://www.php.net/manual/en/curl.installation.php)
-- [guzzlehttp/guzzle](https://github.com/guzzle/guzzle) >= 3.9.2
+- [guzzle/guzzle](https://github.com/guzzle/guzzle) >= 3.9.2
 
 ## Installation
 
